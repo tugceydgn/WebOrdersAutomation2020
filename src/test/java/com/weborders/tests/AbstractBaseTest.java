@@ -13,6 +13,8 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
+import java.io.IOException;
+
 
 public abstract class AbstractBaseTest {
     protected static ExtentReports extentReports;
@@ -52,7 +54,20 @@ public abstract class AbstractBaseTest {
     public void teardown(ITestResult testResult) {
         if (testResult.getStatus() == ITestResult.FAILURE) {
             String screenshotLocation = BrowserUtilities.getScreenshot(testResult.getName());
+            try {
+                extentTest.fail(testResult.getName());  //test name that failed
+                extentTest.addScreenCaptureFromPath(screenshotLocation); //screenshot as an evidence
+                extentTest.fail(testResult.getThrowable()); //error message
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to attach screenshot");
+            }
+        }else if(testResult.getStatus() == ITestResult.SUCCESS){
+            extentTest.pass(testResult.getName());
+        }else if(testResult.getStatus() == ITestResult.SKIP){
+            extentTest.skip(testResult.getName());
         }
+        BrowserUtilities.wait(3);
         Driver.closeDriver();
 
     }
