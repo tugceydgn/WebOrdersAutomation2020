@@ -16,7 +16,7 @@ import org.testng.annotations.BeforeTest;
 import java.io.IOException;
 
 
-public abstract class AbstractBaseTest {
+public abstract class TestBase {
     protected static ExtentReports extentReports;
     protected static ExtentHtmlReporter extentHtmlReporter;
     protected static ExtentTest extentTest;
